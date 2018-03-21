@@ -24,7 +24,7 @@
 	
 6. 编译后的内容在 F:\build\mt5_libs\curl-7.34.0\builds\libcurl-vc14-x64-release-static-ipv6-sspi-spnego-winssl 
 		
-
+====================================================================================================================================
 where <options> is one or many of:
   VC=<6,7,8,9,10>              - VC versions
   WITH_DEVEL=<path>            - Paths for the development files (SSL, zlib, etc.)

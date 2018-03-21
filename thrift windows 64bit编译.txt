@@ -75,4 +75,5 @@ thrift windows 64bit编译
 	另外还可以自行编译thrift文件的生成工具，当然也可以直接从官网下载：http://archive.apache.org/dist/thrift/0.9.3/
 	编译步骤：
 		将compiler\cpp\src\windows\version.h.in文件拷贝到compiler\cpp\src\目录下，并重命名为version.h；
-		到compiler\cpp目录下，打开compiler.sln，编译即可
+		到compiler\cpp目录下，打开compiler.sln，编译
+	由于时间有限，本人并未编译 compiler, 而且直接用的官网版本： http://archive.apache.org/dist/thrift/0.9.3/
