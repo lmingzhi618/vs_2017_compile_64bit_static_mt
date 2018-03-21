@@ -1,0 +1,45 @@
+1. 进入VS2017自带的命令行界面，注意区分版本 
+	运动命令： vcvarsall.bat amd64
+	
+2. 使用如下目录结构
+   somedirectory\
+    |_curl-src
+    | |_winbuild
+    |
+    |_deps
+      |_ lib
+      |_ include
+      |_ bin
+
+3. 将 OpenSSL/zlib 的 lib,dll,头文件(带openssl文件夹) 分别拷贝到 deps 路径的 lib,bin,include 目录下
+4. 复制 zlibstat.lib 为 zlib_a.lib(libcurl_7.34.0指定的zlib库名字为zlib_a.lib)
+5. 进入 winbuild 目录执行以下命令
+	> cd curl-src\winbuild
+	> nmake /f Makefile.vc mode=static VC=14 MACHINE=x64 DEBUG=no CFG=release-ssl-zlib WITH_SSL=static WITH_ZLIB=static ENABLE_WINSSL=no
+	
+	WITH_SSL=static:使用openssl静态库时，需要关闭该选项：ENABLE_WINSSL=no，否则编译错误
+	以下两条指定可以不执行
+	#> set ZLIB_SOURCE="F:\build\mt5_libs\zlib-1.2.11" 
+	#> set OPENSSL_PATH="F:\build\mt5_libs\openssl-1.0.1u"
+	
+6. 编译后的内容在 F:\build\mt5_libs\curl-7.34.0\builds\libcurl-vc14-x64-release-static-ipv6-sspi-spnego-winssl 
+		
+
+where <options> is one or many of:
+  VC=<6,7,8,9,10>              - VC versions
+  WITH_DEVEL=<path>            - Paths for the development files (SSL, zlib, etc.)
+                                 Defaults to sibbling directory deps: ../deps
+                                 Libraries can be fetched at http://pecl2.php.net/downloads/php-windows-builds/
+                                 Uncompress them into the deps folder.
+  WITH_SSL=<dll or static>     - Enable OpenSSL support, DLL or static
+  WITH_ZLIB=<dll or static>    - Enable zlib support, DLL or static
+  WITH_SSH2=<dll or static>    - Enable libSSH2 support, DLL or static
+  ENABLE_SSPI=<yes or no>      - Enable SSPI support, defaults to yes
+  ENABLE_IPV6=<yes or no>      - Enable IPv6, defaults to yes
+  ENABLE_IDN=<yes or no>       - Enable use of Windows IDN APIs, defaults to yes
+                                 Requires Windows Vista or later, or installation from:
+                                 http://www.microsoft.com/downloads/details.aspx?FamilyID=AD6158D7-DDBA-416A-9109-07607425A815
+  ENABLE_WINSSL=<yes or no>    - Enable native Windows SSL support, defaults to yes
+  GEN_PDB=<yes or no>          - Generate Program Database (debug symbols for release build)
+  DEBUG=<yes or no>            - Debug builds
+  MACHINE=<x86 or x64>         - Target architecture (default is x86) 

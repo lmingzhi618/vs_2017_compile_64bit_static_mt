@@ -1,0 +1,61 @@
+一. 编译zlib库64bit
+1. 首先开启VS2017的命令提示窗口。
+2.进入到zlib-1.2.11/contrib/masmx64目录，执行bld_ml64.bat
+3. zlib的vs sln解决方案文件可以在如下路径中找到：zlib-1.2.11/contrib/vstudio/vc14/zlibvc.sln，打开
+
+   这个解决方案中包含6个工程。其中：
+
+   (1). zlibvc生成动态链接库zlibwapi.dll和对应的导入库zlibwapi.lib
+
+   (2). zlibstat生成静态链接库zlibstat.lib
+
+   (3). testzlibdll测试生成的动态链接库zlibwapi.dll
+
+   (4). testzlib测试生成的静态链接库zlibstat.lib        
+
+   最后我们在debug模式下编译整个解决方案。生成的dll和lib文件可在相应的文件夹中找到。
+
+如何使用编译好的动态或是静态库
+这里我们把静态库zlibstat.lib和动态库（zlibwapi.dll/zlibwapi.lib）以及zlib.h/zlibconf.h文件放在一个文件夹中。
+
+二.使用zlib静态库：zlibstat.lib
+1. 包含头文件
+
+    属性--C/C++--常规--附加包含目录（添加包含.h文件的目录）
+
+2. 定义宏
+
+    属性--C/C++--预处理器--预处理器定义：添加 ZLIB_WINAPI ASMV ASMINF
+
+3. 项目包含.lib文件所在的目录：
+
+    属性--链接器--常规--附加库目录
+
+4. 项目包含.lib文件
+
+    属性--链接器--输入--附加依赖项（libstat.lib）
+
+5. 项目代码中 #include "zlib.h"
+
+编译生成.exe即可使用。
+
+三、使用动态库 zlibwapi.lib
+1. 包含头文件
+
+    属性--C/C++--常规--附加包含目录（添加包含.h的目录）
+
+2. 定义宏
+
+    属性--C/C++--预处理器--预处理器定义：添加 ZLIB_WINAPI
+
+3. 项目包含.lib文件所在的目录：
+
+    属性--链接器--常规--附加库目录
+
+4. 项目包含.lib文件
+
+    属性--链接器--输入--附加依赖项（zlibwapi.lib）
+
+5. 项目代码中 #include "zlib.h"
+
+编译生成.exe文件需要.dll文件支持（动态加载）

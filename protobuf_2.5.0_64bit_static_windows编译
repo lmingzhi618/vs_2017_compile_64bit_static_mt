@@ -1,0 +1,10 @@
+protobuf_2.5.0_64bit_static_windows编译
+1. 打开 vsprojects 里面的 sln项目
+2. 设置为 MT
+3. 添加 预处理器定义 _SILENCE_STDEXT_HASH_DEPRECATION_WARNINGS
+4. 报错
+	1）error C3861: “max”: 找不到标识符 /  error C3861: “min”: 找不到标识符
+		在包含头文件处加上 #include<algorithm>
+
+
+	

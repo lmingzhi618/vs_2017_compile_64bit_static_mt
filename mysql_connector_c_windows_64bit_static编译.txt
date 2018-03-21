@@ -1,0 +1,3 @@
+mysql_connector windows 64bit static编译
+1. cmake gui 生成 snl文件 
+2. 打开 sln文件，配置为 lib MT

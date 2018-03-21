@@ -1,0 +1,5 @@
+1. 因为项目中要求编译64位的版本，需要在Makefile.nmake中添加一个LIBFLAGS选项 /MACHINE:X64
+	LIBFLAGS=/nologo /MACHINE:X64
+2. 如果要加调试信息，可以在 CFLAGS中加入/Zi，32位加调试选项是 CFLAGS中加/ZI，当然要调整优化选项/Ox
+3. 按照libevent的文档，使用VC的nmake -f Makefile.nmake即可编译64位release模式。 
+4. 得到三个lib: libevent_core.lib libevent_extras.lib libevent.lib

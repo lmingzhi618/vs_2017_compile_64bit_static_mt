@@ -1,0 +1,10 @@
+jsoncpp windows 64bit static编译
+1. 用vs2017打开sln文件： jsoncpp/makefiles/msvc2010/jsoncpp.sln
+2. 按提示升级为vs2017项目
+3. 设置为 x64 release MT项目
+4. 编译即可生成库文件 lib_json.lib， 位置： jsoncpp\makefiles\msvc2010\x64\Release
+5. 使用lib_json.lib的程序编译错误：
+	1） error C4996: 'Json::Reader::Reader': Use CharReader and CharReaderBuilder instead
+	修改项目属性：C/C++ -> 常规 -> SDL检查： 否 /sdl-
+	
+	

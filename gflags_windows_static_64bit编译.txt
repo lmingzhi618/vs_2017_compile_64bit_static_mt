@@ -1,0 +1,14 @@
+gflags windows 64bit static 编译
+
+1. cmake gui 配置以下选项
+	-BUILD_STATIC_LIBS true
+	-BUILD_gflags_LIBS true
+	-GFLAGS_NAMESPACE="google" 
+	-CMAKE_INSTALL_PREFIX=“F:\build\mt5_libs\gflags\build_gflag\release” 
+2. 点 configure 选择Visual Studio 15 2017 Win64
+3. 点 generato 生成sln文件
+4. C/C++ -> 代码生成 -> MT 
+5. 库管理器 -> 常规 -> 附加依赖项： shlwapi.lib
+	error:　flags_static.lib(gflags.obj) : error LNK2001: 无法解析的外部符号 __imp_PathMatchSpecA
+	没有链接上shlwapi.lib,而shlwapi.lib是已经被废弃的库
+5. 编译 

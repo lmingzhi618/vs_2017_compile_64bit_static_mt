@@ -1,0 +1,24 @@
+windows编译openssl 64位版本
+1.安装ActivePerl，并添加到环境变量 
+2.解压openssl源码到指定目录 
+3.进入VS2017自带的命令行界面，注意区分版本 
+	运动命令： vcvarsall.bat amd64
+4.进入openssl解压目录，E:\mylib\openssl-1.0.2l 
+	运行：perl Configure VC-WIN64A –prefix=E:\mylibs\openssl 
+	进行相关的配置 
+	注意：prefix指定安装目录，VC-WIN64A安装平台 
+5.编译动态库和静态库 
+	运行 nmake -f ms\ntdll.mak进行编译动态库 
+	运行 nmake -f ms\nt.mak进行编译静态库 
+6.测试编译库 
+	测试动态库：>cd out32dll
+				>..\ms\test 
+	测试静态库：>cd out32
+				>..\ms\test 
+	运行结果为: passed all tests 即编译成功 
+	注： 清除上次动态库编译，以便重新编译：nmake -f ms\ntdll.makclean； 
+	清除上次静态库编译，以便重新编译：nmake -f ms\nt.makclean 
+7.安装库 
+	运行 nmake -f ms\ntdll.mak install 进行安装动态库 
+	在E:\mylib\openssl文件目录下生成bin/include/lib/ssl四个文件目录。 
+	运行 nmake -f ms\nt.mak install 进行安装静态库

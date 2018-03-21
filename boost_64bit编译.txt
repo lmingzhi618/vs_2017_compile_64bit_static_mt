@@ -1,0 +1,99 @@
+1. vs2017 命令行 64位环境变量配置
+	1）Path环境变量添加以下两项
+		D:\Program Files (x86)\Microsoft Visual Studio\2017\Community\VC\Tools\MSVC\14.13.26128\bin\Hostx64\x64;
+		D:\Program Files (x86)\Microsoft Visual Studio\2017\Community\VC\Auxiliary\Build
+	2）运动命令 vcvarsall.bat amd64 将命令行切换到64位环境
+	
+2. 切换到boost源码目标，执行以下命令：
+	1）执行bootstrap.bat
+	2) 修改 project-config.jam文件（boost 1.64.0不需要修改）：
+		using msvc : 14.1 : "D:\Program Files (x86)\Microsoft Visual Studio\2017\Community\VC\Tools\MSVC\14.13.26128\bin\Hostx64\x64"; 
+	3）boost支持zlib
+		（1）set  ZLIB_SOURCE="F:\build\mt5_libs\zlib-1.2.11"
+		（2）执行步骤4)编译
+			注：zlib不需要提前编译
+	4）
+		(1) build:
+			b2.exe link=static runtime-link=static threading=multi --build-type=complete --toolset=msvc-14.1 address-model=64 stage --stagedir="F:\build\mt5_libs\boost_1_64_0\stage_vs2017_static"  --build-dir="F:\build\mt5_libs\boost_1_64_0\build"
+		(2) install:
+			b2.exe link=static runtime-link=static threading=multi --build-type=complete --toolset=msvc-14.1 address-model=64 install --prefix="F:\build\mt5_libs\boost_1_64_0\install_vs2017_static"  --build-dir="F:\build\mt5_libs\boost_1_64_0\build"
+		(3) install with zlib
+			(设置 zlib的路径：进入 dos 界面，set  ZLIB_SOURCE=" E:/zlib-1.2.7")
+						
+			b2.exe variant=release link=static runtime-link=static threading=multi --toolset=msvc-14.1 address-model=64 install --prefix="F:\build\mt5_libs\boost_1_64_0\install_vs2017_static_zlib"  --build-dir="F:\build\mt5_libs\boost_1_64_0\build" -sZLIB_SOURCE="F:\build\mt5_libs\zlib-1.2.11"
+	
+	5) boost_1_63_0: warn: Unknown compiler version - please run the configure tests and report the results
+	检查编译器版本时，vs2017编译器版本为1913
+	修改文件 boost/config/compiler/visualc.hpp
+			#if (_MSC_VER > 1910) 修改为 #if (_MSC_VER > 1913)
+		
+	（注意：这里可以编译指定的库：system, thread, date_time，如：--with-system --with-thread --with-date_time；）
+	使用VS进行编程，一定熟悉“属性-C/C++-代码生成-运行库”处，多线程可以分为：MT、MTd、MD、MDd四种。
+	如何编译得到不同类型的多线程运行库呢？其方式在于控制link、runtime-link、release、debug四个参数，其关系图如下：
+		link	runtime-link	编译模式	多线程类型
+		static	static	release	MT
+		static	static	debug	MTd
+		static	shared	release	MD
+		static	shared	debug	MDd
+release
+	mt：表示多线程,d:表示debug,s:标识static
+	指定与你项目连接的运行期库 
+	/MT多线程应用程序
+	/Mtd多线程应用程序(DEBUG) 
+	/MD多线程DLL 
+	/MDd多线程DLL(DEBUG)	
+	
+	
+bjam是专门为boost库设计的编译工具，b2.exe 、bjam.exe 这两个exe作用是一样的，bjam.exe 是老版本，b2是bjam的升级版本
+bjam/b2的参数解释说明：
+-build-dir=<builddir>	编译的临时文件会放在builddir里(这样比较好管理，编译完就可以把它删除了)
+--stagedir=<stagedir>	存放编译后库文件的路径，默认是stage
+--build-type=complete	编译所有版本，不然只会编译一小部分版本（确切地说是相当于:variant=release, threading=multi;link=shared|static;runtime-link=shared）
+variant=debug|release	决定编译什么版本(Debug or Release?)
+link=static|shared	决定使用静态库还是动态库。
+threading=single|multi	决定使用单线程还是多线程库。
+runtime-link=static|shared	决定是静态还是动态链接C/C++标准库。
+--with-<library>	只编译指定的库，如输入--with-regex就只编译regex库了。
+--show-libraries	显示需要编译的库名称
+
+1. stage/install：
+	stage表示只生成库（dll和lib），install表示附带安装功能，会生成包含头文件的include目录。
+	推荐使用stage，因为install生成的这个include目录实际就是boost安装包解压缩后的boost目录，只比include目录多几个非hpp文件，所以可以直接使用,
+	而且不同的IDE都可以使用同一套头文件，这样既节省编译时间，也节省硬盘空间
+2. toolset ：表示编译器工具，默认自动检测，安装了多个编译器的时候可以使用此属性。
+	可选的如borland、gcc、msvc（VC6）、msvc-12.0（VS2013）、msvc-14.0（VS2015）等
+
+3. stagedir/prefix：
+	stage时使用stagedir，install时使用prefix，表示编译生成文件的路径。
+	推荐给不同的IDE指定不同的目录
+4. architecture
+	表示CPU架构
+5. address-model
+	地址长度，32表示编译32位的库文件，64表示编译64位的库文件
+6. link
+	生成动态链接库还是静态链接库。生成动态链接库需使用shared方式，生成静态链接库需使用static方式。
+	一般boost库可能都是以static方式编译，因为最终发布程序带着dll感觉会比较累赘
+7. runtime-link
+	动态还是静态链接C/C++运行时库。同样有shared和static两种方式，这样runtime-link和link一共可以产生4种组合方式，可以根据自己的需要选择编译
+	
+	虽然它和link属性没有直接关系，但习惯上，一个工程如果用动态链接那么所有库都用动态链接，如果用静态链接那么所有库都用静态链接。所以这样其实只需要编译2种组合即可，
+	即 link=shared runtime-link=shared 和 link=static runtime-link=static。
+
+	windows下boost库的命名特点：
+		link=static runtime-link=static 得到 libboostxxxxx.lib 
+		link=shared runtime-link=shared 得到 boostxxxx.lib 和 boostxxxx.dll 
+
+	由以上的文件夹层次结构基本就可以得出结论： 
+		１)以“lib”开头的是“link-static”版本的，而直接以“boost”开头的是“link-shared”版本的。 
+		２)有“d”的为debug版本，没有的则是release版本。 
+		３)有“s”的为“runtime-link-static”版本，没有的则是“runtime-link-shared”版本。 
+		４)有“mt”的为“threading-multi”版本，没有的则是“threading-single”版本。
+	GCC下，在生成动态库（–link=shared）时，就不允许进行静态链接到C运行库（或C++标准库）
+
+8. threading
+	单线程还是多线程编译。一般都写多线程程序，指定multi方式了；需要编译单线程库，可以使用single方式
+9. debug/release：
+	编译debug/release版本。一般都是程序的debug版本对应库的debug版本，所以两个都编译
+10. without/with：
+	选择不编译/编译哪些库。这里我们指定要编译哪些库，就使用了witth，注意写法：--with-thread --with-date_time，同样，如果不想编译哪些库，可以类似写法--without-thread
+

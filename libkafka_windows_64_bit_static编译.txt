@@ -1,0 +1,10 @@
+rabbitmq-c_windows_64bit_static编译
+1. cmake gui 设定好 源码目录和编译目录
+2. cmake gui 指定 LIB_EAY_RELEASE 为 libeay32.lib 的路径， SSL_EAY_RELEASE 为 ssleay32.lib 的路径
+3. 勾选 BUILD_STATIC_LIBS 编译静态库
+3. configure 指定 Visual Studio 15 2017 Win64
+4. Generate 生成sln项目
+5. Open Project打开 sln项目
+6. 打开 rabbitmq-static 项目属性，设置属性： MT 
+7. 直接编译
+8. 编译结果路径：rabbitmq-c-1.8.0\build\librabbitmq\Release

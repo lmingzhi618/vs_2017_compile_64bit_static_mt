@@ -1,0 +1,17 @@
+glog windows 64 static 编译
+1. cmake gui 配置以下选项
+	CMAKE_INSTALL_PREFIX F:/build/mt5_libs/glog/build_glog/Release 		# 安装目录
+	WITH_GFLAGS true
+	WITH_THREADS true 
+	WITH_TLS true	
+	gflags_DIR F:/build/mt5_libs/gflags/build_gflags					# gflags构建目录
+2. 点击 Configure，选择 Visual Studio 15 2017 Win64 
+3. 点击 Generate 生成sln文件
+4. Open Project打开工程，并配置以下项目属性：
+	1）C/C++ -> 代码生成 -> MT 
+	2）库管理器 -> 附加库目录 -> F:\build\mt5_libs\gflags\build_gflags\lib\Release # gflags库目录
+5. 编译结果： F:\build\mt5_libs\glog\build_glog\Release
+6. 使用glog的windows程序需要配置以下选项：
+	1. C/C++ -> 预处理器 -> 预处理器定义 _WINDOWS;GLOG_NO_ABBREVIATED_SEVERITIES;GOOGLE_GLOG_DLL_DECL=;
+		否则报链接失败
+

@@ -1,0 +1,1 @@
+# vs_2017_compile_64bit_static_mt
