@@ -13,7 +13,7 @@ x	4) libthrift 项目 server目录添加以下文件 ：
 		TServerFramework.cpp 
 	5) 编译信息 src\thrift\server\tserverframework.cpp(222): error C2589: “(”:“::”右边的非法标记
 		（1）项目属性->C++->预处理器->预处理器定义：添加宏： NOMINMAX   -> NG
-		（6）用括号将 std::max 括起来，如　(std::max)(hwm_, clients);	-> OK
+		（2）用括号将 std::max 括起来，如　(std::max)(hwm_, clients);	-> OK
 	6) 编译信息 warning C4996: 'std::tr1'  ->可忽略 
 		std::tr1 命名空间已弃用
 		现在，非标准 std::tr1 命名空间在 C++14 和 C++17 这两种模式中均标记为已弃用。 在 Visual Studio 2017 版本 15.5 中，以下代码引发错误 C4996：
