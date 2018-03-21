@@ -26,7 +26,9 @@
 	检查编译器版本时，vs2017编译器版本为1913
 	修改文件 boost/config/compiler/visualc.hpp
 			#if (_MSC_VER > 1910) 修改为 #if (_MSC_VER > 1913)
-		
+
+============================================================================================================================================
+
 	（注意：这里可以编译指定的库：system, thread, date_time，如：--with-system --with-thread --with-date_time；）
 	使用VS进行编程，一定熟悉“属性-C/C++-代码生成-运行库”处，多线程可以分为：MT、MTd、MD、MDd四种。
 	如何编译得到不同类型的多线程运行库呢？其方式在于控制link、runtime-link、release、debug四个参数，其关系图如下：
@@ -35,7 +37,7 @@
 		static	static	debug	MTd
 		static	shared	release	MD
 		static	shared	debug	MDd
-release
+
 	mt：表示多线程,d:表示debug,s:标识static
 	指定与你项目连接的运行期库 
 	/MT多线程应用程序
