@@ -6,27 +6,22 @@ thrift windows 64bit编译
 		libthriftnb工程是非阻塞（non-blocking）模式的服务server端，也只有编译libthriftnb时才需要依赖libevent库，否则可以不编译libevent库；
 	2) 设置依赖库头文件和库文件，这就不再介绍了；
 	3) 设置C\C++->代码生成->运行库 设为 MT
-x	4) libthrift 项目 server目录添加以下文件 ：
-		TConnectedClient.h 
-		TConnectedClient.cpp 
-		TServerFramework.h 
-		TServerFramework.cpp 
-	5) 编译信息 src\thrift\server\tserverframework.cpp(222): error C2589: “(”:“::”右边的非法标记
+	4) 编译信息 src\thrift\server\tserverframework.cpp(222): error C2589: “(”:“::”右边的非法标记
 		（1）项目属性->C++->预处理器->预处理器定义：添加宏： NOMINMAX   -> NG
 		（2）用括号将 std::max 括起来，如　(std::max)(hwm_, clients);	-> OK
-	6) 编译信息 warning C4996: 'std::tr1'  ->可忽略 
+	5) 编译信息 warning C4996: 'std::tr1'  ->可忽略 
 		std::tr1 命名空间已弃用
 		现在，非标准 std::tr1 命名空间在 C++14 和 C++17 这两种模式中均标记为已弃用。 在 Visual Studio 2017 版本 15.5 中，以下代码引发错误 C4996：
 		thrift/cxxfunctional.h:77 
 			use std::tr1::function;   -->  use std::function;
 			参考: https://docs.microsoft.com/zh-cn/cpp/cpp-conformance-improvements-2017
-	7) thrift 库项目->async目录添加以下文件:
+	6) thrift 库项目->async目录添加以下文件:
 		TConcurrentClientSyncInfo.cpp 
-	8) thrift 库项目->protocol目录添加以下文件:
+	7) thrift 库项目->protocol目录添加以下文件:
 		TProtocol.cpp 
-	9) thrift 库项目添加以下文件:
+	8) thrift 库项目添加以下文件:
 		TOutput.cpp
-	10) TNonblockingServer() 使用 BoostThreadFactory 异常 :
+	9) TNonblockingServer() 使用 BoostThreadFactory 异常 :
 		boost::shared_ptr<BoostThreadFactory> threadFactory = boost::shared_ptr<BoostThreadFactory>(new BoostThreadFactory());
 		threadManager->threadFactory(threadFactory);
 		threadManager->start();
@@ -36,7 +31,7 @@ x	4) libthrift 项目 server目录添加以下文件 ：
 		#undef USE_STD_THREAD
 		#define USE_BOOST_THREAD 1
 		
-	11) rror LNK2001: 无法解析的外部符号 "public: __cdecl apache::thrift::concurrency::BoostThreadFactory:
+	10) rror LNK2001: 无法解析的外部符号 "public: __cdecl apache::thrift::concurrency::BoostThreadFactory:
 		(1) thrift/windows/config.h文件,因为vs版本原因(vs2017:1913),导致USE_BOOST_THREAD被屏蔽
 			#if _MSC_VER >= 1700
 			#define USE_STD_THREAD 1
@@ -65,7 +60,7 @@ x	4) libthrift 项目 server目录添加以下文件 ：
 		+	#define USE_BOOST_THREAD 1
 		
 		参考: https://issues.apache.org/jira/browse/THRIFT-4258
-	12) 程序“[10320] test.exe”已退出，返回值为 255 (0xff) 
+	11) 程序“[10320] test.exe”已退出，返回值为 255 (0xff) 
 		boost-1.6.3不支持vs2017，用boost-1.6.4 -->验证 OK
 		
 		参考: 	https://svn.boost.org/trac10/ticket/12914?replyto=description
