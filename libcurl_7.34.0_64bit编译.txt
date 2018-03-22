@@ -1,3 +1,5 @@
+方法一
+libcurl-7.34.0
 1. 进入VS2017自带的命令行界面，注意区分版本 
 	运动命令： vcvarsall.bat amd64
 	
@@ -15,7 +17,8 @@
 4. 复制 zlibstat.lib 为 zlib_a.lib(libcurl_7.34.0指定的zlib库名字为zlib_a.lib)
 5. 进入 winbuild 目录执行以下命令
 	> cd curl-src\winbuild
-	> nmake /f Makefile.vc mode=static VC=14 MACHINE=x64 DEBUG=no CFG=release-ssl-zlib WITH_SSL=static WITH_ZLIB=static ENABLE_WINSSL=no
+	> D:\Program Files (x86)\Microsoft Visual Studio\2017\Community\VC\Tools\MSVC\14.13.26128\bin\Hostx64\x64\nmake
+	> nmake /f Makefile.vc mode=static VC=14.1 MACHINE=x64 DEBUG=no CFG=release-ssl-zlib WITH_SSL=static WITH_ZLIB=static ENABLE_SSPI=no ENABLE_IDN=no ENABLE_WINSSL=no
 	
 	WITH_SSL=static:使用openssl静态库时，需要关闭该选项：ENABLE_WINSSL=no，否则编译错误
 	以下两条指定可以不执行
@@ -24,7 +27,7 @@
 	
 6. 编译后的内容在 F:\build\mt5_libs\curl-7.34.0\builds\libcurl-vc14-x64-release-static-ipv6-sspi-spnego-winssl 
 		
-====================================================================================================================================
+
 where <options> is one or many of:
   VC=<6,7,8,9,10>              - VC versions
   WITH_DEVEL=<path>            - Paths for the development files (SSL, zlib, etc.)
@@ -43,3 +46,19 @@ where <options> is one or many of:
   GEN_PDB=<yes or no>          - Generate Program Database (debug symbols for release build)
   DEBUG=<yes or no>            - Debug builds
   MACHINE=<x86 or x64>         - Target architecture (default is x86) 
+  
+ 用以上方法生成的库，竟然不能在vs2017上报错：
+ 错误  LNK2001  无法解析的外部符号 __imp_curl_*
+ ====================================================================================================
+ 方法二： 用cmake生成vs2017 64bit 方案
+ 1. LIB_EAY_RELEASE 指定路径为 F:/build/mt5_libs/archives/openssl-1.0.1u/out32/libeay32.lib
+ 2. SSL_EAY_RELEASE 指定路径为 F:/build/mt5_libs/archives/openssl-1.0.1u/out32/ssleay32.lib
+ 3. configure 指定 Visual Studio 15 2017 Win64
+ 4. generate 生成sln项目
+ 5. open project
+ 6. 设置项目属性：
+	1. MT
+	2. 指定openssl 头文件 和 库路径
+7. 编译并试用 OK
+ 
+ 
